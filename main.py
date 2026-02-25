@@ -1,4 +1,10 @@
+import pandas as pd
+from parser.search_parser import get_products
+from parser.product_parser import get_product_detail
+from parser.seller_parser import get_seller_info
+
 QUERY = "пальто из натуральной шерсти"
+
 
 def main():
     products = get_products(QUERY, pages=2)
@@ -24,6 +30,18 @@ def main():
             "Количество отзывов": item["reviews"],
             "Страна производства": detail.get("country")
         })
+
+    df = pd.DataFrame(full_data)
+    df.to_excel("data/full_catalog.xlsx", index=False)
+
+    df_filtered = df[
+        (df["Рейтинг"] >= 4.5) &
+        (df["Цена"] <= 10000) &
+        (df["Страна производства"] == "Россия")
+    ]
+
+    df_filtered.to_excel("data/filtered_catalog.xlsx", index=False)
+
 
 if __name__ == "__main__":
     main()
