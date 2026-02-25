@@ -1,0 +1,29 @@
+QUERY = "пальто из натуральной шерсти"
+
+def main():
+    products = get_products(QUERY, pages=2)
+
+    full_data = []
+
+    for item in products:
+        detail = get_product_detail(item["nmId"])
+        seller = get_seller_info(item["sellerId"])
+
+        full_data.append({
+            "Ссылка на товар": f"https://www.wildberries.ru/catalog/{item['nmId']}/detail.aspx",
+            "Артикул": item["nmId"],
+            "Название": detail.get("name"),
+            "Цена": item["price"],
+            "Описание": detail.get("description"),
+            "Ссылки на изображения": detail.get("images"),
+            "Характеристики": detail.get("characteristics"),
+            "Название селлера": seller["seller_name"],
+            "Ссылка на селлера": seller["seller_link"],
+            "Размеры": item["sizes"],
+            "Рейтинг": item["rating"],
+            "Количество отзывов": item["reviews"],
+            "Страна производства": detail.get("country")
+        })
+
+if __name__ == "__main__":
+    main()
